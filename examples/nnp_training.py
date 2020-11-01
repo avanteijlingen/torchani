@@ -40,7 +40,7 @@ import math
 import torch.utils.tensorboard
 import tqdm
 import sys
-
+import matplotlib.pyplot as plt
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
@@ -76,7 +76,7 @@ Zeta = torch.tensor([3.2000000e+01], device=device)
 ShfZ = torch.tensor([1.9634954e-01, 5.8904862e-01, 9.8174770e-01, 1.3744468e+00, 1.7671459e+00, 2.1598449e+00, 2.5525440e+00, 2.9452431e+00], device=device)
 EtaA = torch.tensor([8.0000000e+00], device=device)
 ShfA = torch.tensor([9.0000000e-01, 1.5500000e+00, 2.2000000e+00, 2.8500000e+00], device=device)
-species_order = ['H', 'C', 'N', 'O']
+species_order = ['H', 'C', 'K', 'O'] # ['H', 'C', 'N', 'O']
 num_species = len(species_order)
 aev_computer = torchani.AEVComputer(Rcr, Rca, EtaR, ShfR, EtaA, Zeta, ShfA, ShfZ, num_species)
 energy_shifter = torchani.utils.EnergyShifter(None)
@@ -97,7 +97,8 @@ try:
     path = os.path.dirname(os.path.realpath(__file__))
 except NameError:
     path = os.getcwd()
-dspath = os.path.join(path, '../dataset/ani1-up_to_gdb4/ani_gdb_s01.h5')
+#dspath = os.path.join(path, '../dataset/ani1-up_to_gdb4/ani_gdb_s01.h5')
+dspath = os.path.join(path, '../dataset/ani1-up_to_gdb4/mytestfile.h5')
 if not os.path.exists(dspath):
     print("dataset path does not exist! Exiting.")
     sys.exit()
@@ -308,6 +309,7 @@ best_model_checkpoint = 'best.pt'
 
 for _ in range(AdamW_scheduler.last_epoch + 1, max_epochs):
     rmse = validate()
+    plt.scatter([AdamW_scheduler.last_epoch+1], [rmse])
     print('RMSE:', rmse, 'at epoch', AdamW_scheduler.last_epoch + 1)
 
     learning_rate = AdamW.param_groups[0]['lr']
@@ -355,3 +357,5 @@ for _ in range(AdamW_scheduler.last_epoch + 1, max_epochs):
         'AdamW_scheduler': AdamW_scheduler.state_dict(),
         'SGD_scheduler': SGD_scheduler.state_dict(),
     }, latest_checkpoint)
+
+plt.ylabel("RMSE")
