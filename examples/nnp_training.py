@@ -302,7 +302,7 @@ tensorboard = torch.utils.tensorboard.SummaryWriter()
 mse = torch.nn.MSELoss(reduction='none')
 
 print("training starting from epoch", AdamW_scheduler.last_epoch + 1)
-max_epochs = 10
+max_epochs = 150
 early_stopping_learning_rate = 1.0E-5
 best_model_checkpoint = 'best.pt'
 
