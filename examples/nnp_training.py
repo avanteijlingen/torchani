@@ -41,6 +41,10 @@ import torch.utils.tensorboard
 import tqdm
 import sys
 
+
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+
+
 # helper function to convert energy unit from Hartree to kcal/mol
 from torchani.units import hartree2kcalmol
 
